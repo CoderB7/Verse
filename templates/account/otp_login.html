@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% csrf_token %}
+
+{% block title %}VERSE{% endblock %}
+
+{% block content %}
+    <div class="login_field">
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+        <div class="d-flex align-items-center justify-content-center pb-3">
+            <h3 class="text-light fs-2 fw-bolder">Log In</h3>
+        </div>
+        <form id="otp-form" method="post" action="{% url 'otp_login' %}">
+            <div class="container">
+                <div class="col">
+                    
+                    <label for="uname" class="d-flex align-items-center justify-content-center fw-bold fs-3 ">
+                        Username:
+                    </label>
+                    
+                    <div id="uname" class="d-flex align-items-center justify-content-center pt-2">
+                        <input type="text" class="username-input" id="username-input" name="username">
+                    </div>
+                    <!-- Display errors for username field -->
+                    {% if errors.username %}
+                        <div class="text-danger text-center">
+                            <p>{{ errors.username }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            
+            
+                <div class="col pt-4">
+                    <label for="otp" class="d-flex align-items-center justify-content-center fw-bold fs-4">
+                        Enter OTP code, <span class="fs-5">you can get it from <a href="t.me/verse_uz_bot">verse bot</a></span>
+                    </label>
+                    <div class="d-flex align-items-center justify-content-center gap-2 pt-2" id="otp">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-1" name="otp[]">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-2" name="otp[]">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-3" name="otp[]">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-4" name="otp[]">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-5" name="otp[]">
+                        <input type="text" class="otp-input" maxlength="1" id="otp-6" name="otp[]">
+                    </div>
+                    <!-- Display errors for OTP field -->
+                    {% if errors.otp %}
+                        <div class="text-danger text-center">
+                            <p>{{ errors.otp }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+                    
+            </div>
+            <div class="d-flex align-items-center justify-content-center form-group pt-5 mt-2">
+                <button class="btn btn-light fw-bold fs-4" type="submit">Log In</button>
+            </div>
+        </form>
+        
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'otp.js' %}"></script>
+{% endblock %}

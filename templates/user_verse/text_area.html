@@ -1,0 +1,59 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+
+{% block csrf_block %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'user_verse/editor.css'%}">
+{% endblock %}
+
+{% block title %}Text Editor{% endblock %}
+
+{% block content %}
+    <div class="col-11 p-0">
+        
+        <div class="container">
+            <div class="editor-container">
+                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+                
+                
+                    <div id="channel-info" class="p-3" data-channel-id="{{channel_id}}">
+                        <h3 class="text-light">Channel |  <a href="{% url 'post-list' channel_id %}" style="text-decoration: none; color: white"><span class="fs-2 fw-bolder">{{channel_name}}</span></a></h3>
+                    </div>
+               
+                    
+                <div class="editor editor-title editor-content-title editor-placeholder" contenteditable="true" 
+                    data-placeholder="Post title...">{{ post.title|default:"Post title..." }}
+                </div>
+                <div class="editor editor-body editor-content-body editor-placeholder" contenteditable="true" 
+                    data-placeholder="Start writing your content here...">{{ post.content|default:"Start writing your content here..." }}
+                </div>
+                {% if post %}
+                <div id="post-id" class="d-flex justify-content-end" data-post-id="{{post.id}}">
+                    <a href="" class="">
+                        <button type="button" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1" onclick="submitPost('update')"> 
+                        Update
+                        </button>
+                    </a>
+                </div>
+                {% else %}
+                    <div class="d-flex justify-content-end">
+                        <a href="" class="">
+                            <button type="button" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1" onclick="submitPost('publish')"> 
+                            Publish
+                            </button>
+                        </a>
+                    </div>
+                {% endif %}    
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'dashboard.js' %}"></script>
+{% endblock %}
+
+

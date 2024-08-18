@@ -1,0 +1,147 @@
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+html {
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    /*background: #fafafa;*/
+    background: #505259;
+    color: #ffffff;;
+    min-height: 100vh;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #444444;
+}
+
+.channel-card {
+    background-color: #c5c3c3; /* Gray background */
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    margin-bottom: 1rem; /* Space between cards */
+    border-radius: 2px; /* Rounded corners */
+    transition: all 0.3s ease; /* Smooth transition */
+     /* Padding inside the card */
+}
+
+.channel-card:hover {
+    outline: 6px solid #007bff; /* Outline on hover */
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 280px;
+    overflow-y: auto;
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar-item {
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px; /* Rounded corners */
+}
+
+.nav-link:hover {
+    background-color: #3b8ed2;
+}
+
+.active-item {
+    background-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.container_divider {
+    flex-direction: row;
+    width: 100%;
+    padding-top: 1%;
+    padding-bottom: 4%;
+}
+
+.fixed-bottom-right {
+    position: fixed;
+    bottom: 40px;
+    right: 15%;
+    z-index: 1000;
+}
+
+.container_divider_cs1 {
+    flex-direction: row;
+    width: 25%;
+    padding-bottom: 2%;
+}
+
+hr.n_1 {
+    border: 3px solid black;
+    border-radius: 20px;
+}
+
+.container_info {
+    color: black;
+    text-align: center;
+    background-color: #3e93ed;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    padding: 5px 10px 5px 10px;
+    position: relative;
+}
+
+.channel-info-post {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    padding: 10px 0;
+    background-color: #272727;
+    border-radius: 0 0 16px 16px;
+}
+
+.channel-info-image {
+    padding: 0 0 0 20px;
+}
+
+.channel-content {
+    padding-top: 200px;
+}
+  
+.container_info.notification-show {
+opacity: 1;
+transform: translateX(0);
+}
+
+.channel-detail {
+margin: 10px 0;
+}
+
+.channel-detail-info {
+margin: 10px 0;
+text-align: left;
+padding-top: 5px; 
+}
+
+.channel-value {
+line-height: 1.0;
+color: whitesmoke;
+}
+
+img-notification {
+border-radius: 50%;
+max-width: 100px;
+}

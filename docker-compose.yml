@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    container_name: ${PROJECT_NAME}_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PORT=${DB_PORT}
+    restart: always
+
+  web: &web
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_NAME}_web
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:${DJANGO_PORT} --workers=4
+    volumes:
+      - ./:/app
+      - ./locales:/home/app/web/locales
+      - ./static:/home/app/web/static
+      - ./media:/home/app/web/media
+    security_opt:
+      - seccomp:unconfined
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Tashkent
+    ports:
+      - ${DJANGO_PORT}:${DJANGO_PORT}
+    depends_on:
+      - db
+    restart: always
+
+  daphne:
+    container_name: ${PROJECT_NAME}_daphne
+    <<: *web
+    ports:
+      - ${WEBSOCKET_PORT}:${WEBSOCKET_PORT}
+    command: python -m daphne -b 0.0.0.0 -p ${WEBSOCKET_PORT} core.asgi:application
+
+  redis:
+    container_name: ${PROJECT_NAME}_redis
+    image: redis:6-alpine
+    restart: always
+
+  celery:
+    container_name: ${PROJECT_NAME}_celery
+    <<: *web
+    ports: [ ]
+    command: celery -A config worker --beat --scheduler django --loglevel=info  -c ${CELERY_WORKERS}
+    restart: always
+
+volumes:
+  postgres_data:
