@@ -381,3 +381,5 @@ Temporary Items
 celerybeat-schedule.db
 
 dump.rdb
+
+.vscode
