@@ -53,7 +53,7 @@ services:
     container_name: ${PROJECT_NAME}_celery
     <<: *web
     ports: [ ]
-    command: celery -A core worker --beat --scheduler django --loglevel=info  -c ${CELERY_WORKERS}
+    command: celery -A core worker --beat --scheduler celery.beat.PersistentScheduler --loglevel=info  -c ${CELERY_WORKERS}
     restart: always
 
 volumes:
