@@ -178,11 +178,13 @@ OTP_EXPIRE_TIME = 120
 
 
 # Celery configuration options
-CELERY_BROKER_URL = 'redis://redis:6381/'  # URL for the Redis server
-CELERY_RESULT_BACKEND = 'redis://redis:6381/'  # Redis backend for storing task results
+CELERY_BROKER_URL = 'redis://redis:6379/'  # URL for the Redis server
+CELERY_RESULT_BACKEND = 'redis://redis:6379/'  # Redis backend for storing task results
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = 'UTC'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
