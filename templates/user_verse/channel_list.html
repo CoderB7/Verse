@@ -131,12 +131,12 @@
 
 {% block js %}
 <script src="{% static 'main_page.js' %}"></script>
-<script>
+<!-- <script>
     document.querySelectorAll('.dynamic-image').forEach(img => {
     img.onerror = () => {
       img.src = '{% static "default_image.jpg" %}';
     };
   });
-</script>
+</script> -->
 {% endblock %}
 

@@ -50,8 +50,8 @@ document.querySelectorAll('.editor').forEach(element => {
     fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,  // Ensure you include CSRF token for Django
+        'Content-Type': 'application/json', 
+        'X-CSRFToken': csrfToken,   // Ensure you include CSRF token for Django
       }, 
       body: JSON.stringify(dataToSend)
     })

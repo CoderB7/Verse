@@ -13,7 +13,6 @@ def info_created(sender, instance, created, **kwargs):
     if created:
         channel_layer = get_channel_layer()
         django_user = instance.user.django_user
-        print(django_user.id)
         chat_info = {
             'chat_id': instance.chat_id,
             'chat_title': instance.chat_title,

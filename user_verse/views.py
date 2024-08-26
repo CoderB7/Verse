@@ -107,7 +107,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
                         chat=selected_channel,
                         blog=None,
                     )
-                
+                    
                     return JsonResponse({"status": "ok"}, status=200)
                 except Exception as e:
                     # Log and handle exceptions

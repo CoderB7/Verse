@@ -145,7 +145,6 @@ LOGIN_URL = 'otp_login'
 LOGIN_REDIRECT_URL = 'profile'
 
 AUTHENTICATION_BACKENDS = [
-    # 'account.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -173,7 +172,7 @@ CHANNEL_LAYERS = {
 
 TELEGRAM_WEBHOOK_URL = os.getenv('TELEGRAM_WEBHOOK_URL')
 
-OTP_EXPIRE_TIME = 120
+OTP_EXPIRE_TIME = os.getenv('OTP_EXPIRE_TIME')
 
 
 
