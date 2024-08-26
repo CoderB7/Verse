@@ -2,14 +2,14 @@ from core.settings.base import *
 
 DEBUG = False
 
-# ALLOWED_HOSTS = [
-#     "cura.falconsoft.uz",
-# ]
+ALLOWED_HOSTS = [
+    "*",
+]
 
-# CSRF_TRUSTED_ORIGINS = [
-#     "https://cura.falconsoft.uz",
-# ]
-# CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://verse.userb.uz",
+]
+CSRF_COOKIE_SECURE = True
 
 DATABASES = {
     "default": {
