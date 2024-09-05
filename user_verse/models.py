@@ -28,10 +28,13 @@ class Post(BaseModel):
                                related_name='posts')
     title = models.CharField(max_length=150)
     content = models.TextField()
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
     publish = models.DateTimeField(auto_now_add=timezone.now)
+    telegram_message_id = models.CharField(max_length=128, null=True, blank=True)    
+
     chat = models.ForeignKey(TelegramChatInfo, on_delete=models.CASCADE, related_name='posts', null=True, default=None)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='blogs', null=True, blank=True)
+
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
 
     class Meta:
         ordering = ['-publish']

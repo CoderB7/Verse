@@ -164,7 +164,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis', 6379)],
+            "hosts": [('localhost', 6380)], # change it to 'redis' and 6379
         },
     },
 }
@@ -177,8 +177,8 @@ OTP_EXPIRE_TIME = os.getenv('OTP_EXPIRE_TIME')
 
 
 # Celery configuration options
-CELERY_BROKER_URL = 'redis://redis:6379/'  # URL for the Redis server
-CELERY_RESULT_BACKEND = 'redis://redis:6379/'  # Redis backend for storing task results
+CELERY_BROKER_URL = 'redis://localhost:6379/'  # URL for the Redis server
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/'  # Redis backend for storing task results
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = 'UTC'

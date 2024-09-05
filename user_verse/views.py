@@ -11,9 +11,9 @@ from django.utils.decorators import method_decorator
 from .models import Blog, Post
 from bot.models import TelegramChatInfo
 from .scripts.chat_info import get_chat_photo, get_chat_info
-from .forms import BlogRegistrationForm
+from .forms import BlogRegistrationForm, PostForm
 
-from bot.views import send_message
+from bot.views import send_message, update_message
 
 from django.views.generic import (
     ListView,
@@ -84,59 +84,48 @@ class BlogListView(LoginRequiredMixin, ListView):
         context['user_blogs'] = user_blogs
         
         return render(request, self.template_name, context)
-
-
-
+    
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PostCreateView(LoginRequiredMixin, CreateView):
 
-    def post(self, request, *args, **kwargs):    
-        post_title = json.loads(request.body)['title']
-        post_content = json.loads(request.body)['body']
-        try:
-            channel_id = json.loads(request.body)['channel_id']
-            if channel_id:
-                try:
-                    selected_channel = TelegramChatInfo.objects.get(id=channel_id)
-
-                    Post.objects.create(
-                        author=request.user,
-                        title=post_title,
-                        content=post_content,
-                        chat=selected_channel,
-                        blog=None,
-                    )
-                    
-                    return JsonResponse({"status": "ok"}, status=200)
-                except Exception as e:
-                    # Log and handle exceptions
-                    print(f"Error triggering Celery task: {e}")
-                            # Call the Celery task
-        except KeyError:
-            blog_id = json.loads(request.body)['blog_id']
-            if blog_id:
-                selected_blog = Blog.objects.get(id=blog_id)
-                
-                Post.objects.create(
-                    author=request.user,
-                    title=post_title,
-                    content=post_content,
-                    chat=None,
-                    blog=selected_blog,
-                )
+    def post(self, request, *args, **kwargs):
+        form = PostForm(request.POST)  
+        channel_id = self.kwargs.get('channel_id')
+        if channel_id:
+            selected_channel = TelegramChatInfo.objects.get(id=channel_id)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.chat = selected_channel
+                post.blog = None
+                post.save()
+                return redirect('post-list', channel_id)
         
-        return JsonResponse({"status": "ok"}, status=200)
+        else:
+            blog_id = self.kwargs.get('blog_id')
+            selected_blog = Blog.objects.get(id=blog_id)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.chat = None
+                post.blog = selected_blog
+                post.save()
+                return redirect('blog-post-list', blog_id)
     
+
     def get(self, request, *args, **kwargs):
+        form = PostForm()
         channel_id = kwargs.get('channel_id')
         blog_id = kwargs.get('blog_id')
         if channel_id:
             selected_channel = TelegramChatInfo.objects.get(id=channel_id)
-        
+
             context = {
+                "form": form,
                 "channel_id": channel_id,
                 "channel_name": selected_channel.chat_title,
+                "route": "post-create",
             }
             return render(request, 'user_verse/text_area.html', context=context)
         
@@ -144,24 +133,21 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             selected_blog = Blog.objects.get(id=blog_id)
 
             context = {
+                "form": form,
                 "verse_id": blog_id,
                 "verse_name": selected_blog.blog_title,
             }
-            return render(request, 'user_verse/blog_text_editor.html', context=context)
-        
-        
+            return render(request, 'user_verse/blog_text_editor.html', context=context)    
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PostListView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         channel_id = kwargs.get('channel_id')
-        print(channel_id)
         blog_id = kwargs.get('blog_id')
         if channel_id:
             channel = TelegramChatInfo.objects.get(id=channel_id)
             channel_posts = Post.objects.filter(chat=channel_id)
-            print(channel_posts)
 
             context = {
                 "channel": channel,
@@ -185,37 +171,47 @@ class PostListView(LoginRequiredMixin, ListView):
         
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    
     def get(self, request, *args, **kwargs):
-        channel_id = kwargs.get('channel_id')
+        channel_id = self.kwargs.get('channel_id')
         channel = TelegramChatInfo.objects.get(id=channel_id)
 
-        post_id = kwargs.get('post_id')
+        post_id = self.kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
+        form = PostForm(instance=post)
         context = {
+            'form': form,
             'channel_id': channel.id,
             'channel_name': channel.chat_title,
             'post': post,
+            'route': 'post-update',
         }
         return render(request, 'user_verse/text_area.html', context=context)
 
     def post(self, request, *args, **kwargs):
-        post_title = json.loads(request.body)['title']
-        post_content = json.loads(request.body)['body']
-        post_id = json.loads(request.body)['post_id']
-        channel_id = json.loads(request.body)['channel_id']
+        # post_title = json.loads(request.body)['title']
+        # post_content = json.loads(request.body)['body']
+        # post_id = json.loads(request.body)['post_id']
+        post_id = self.kwargs.get('post_id')
+        # channel_id = json.loads(request.body)['channel_id']
+        channel_id = self.kwargs.get('channel_id')
         channel = TelegramChatInfo.objects.get(id=channel_id)
 
-
         post = get_object_or_404(Post, id=post_id)
-        post.title = post_title
-        post.content = post_content
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
 
-        post.save()
-
-        send_message(chat_id=channel.chat_id, title=post_title, content=post_content)
+        if post.telegram_message_id:
+            update_message.delay(
+                chat_id=channel.chat_id, 
+                telegram_message_id=post.telegram_message_id,
+                title=post.title, 
+                content=post.content
+            )
         
-        return JsonResponse({"status": "ok"}, status=200)
+        return redirect('post-list', channel_id)
 
 
 
@@ -263,7 +259,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         # print('success_2')
         # return HttpResponse(status=204)
 
-
 # def delete_webhook(request):
 #     if request.method == 'GET':
 #         is_deleted = subprocess.run(["python", "user_verse/scripts/delete_webhook.py"], capture_output=True)
@@ -273,3 +268,43 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 #         else:
 #             print(f"Failed to delete webhook")
 #         return HttpResponse(status=204)
+
+
+#### post createing old method
+    # def post_abd(self, request, *args, **kwargs):    
+    #     post_title = json.loads(request.body)['title']
+    #     post_content = json.loads(request.body)['body']
+    #     try:
+    #         channel_id = json.loads(request.body)['channel_id']
+    #         if channel_id:
+    #             try:
+    #                 selected_channel = TelegramChatInfo.objects.get(id=channel_id)
+    #                 print('posting...')
+    #                 Post.objects.create(
+    #                     author=request.user,
+    #                     title=post_title,
+    #                     content=post_content,
+    #                     chat=selected_channel,
+    #                     blog=None,
+    #                 )
+    #                 print('created')
+    #                 return JsonResponse({"status": "ok"}, status=200)
+    #             except Exception as e:
+    #                 # Log and handle exceptions
+    #                 print(f"Error triggering Celery task: {e}")
+    #                         # Call the Celery task
+    #     except KeyError:
+    #         blog_id = json.loads(request.body)['blog_id']
+    #         if blog_id:
+    #             selected_blog = Blog.objects.get(id=blog_id)
+                
+    #             Post.objects.create(
+    #                 author=request.user,
+    #                 title=post_title,
+    #                 content=post_content,
+    #                 chat=None,
+    #                 blog=selected_blog,
+    #             )
+        
+    #     return JsonResponse({"status": "ok"}, status=200)
+    

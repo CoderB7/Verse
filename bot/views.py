@@ -53,9 +53,26 @@ def send_message(chat_id, title, content):
     message = f"**{title}**\n\n{content}"
     
     try:
-        bot.send_message(chat_id=chat_id, text=message, parse_mode='Markdown')
+        sent_message = bot.send_message(chat_id=chat_id, text=message, parse_mode='Markdown')
+        message_id = sent_message.message_id
+        print(message_id)
         logger.info(f"Message sent to chat_id {chat_id}: {message}")
-        return True
+        return message_id
     except Exception as e:
         logger.error(f"Failed to send message to chat_id {chat_id}: {e}")
+        return False
+
+@shared_task
+def update_message(chat_id, telegram_message_id, title, content):
+    message = f"**{title}**\n\n{content}"
+
+    try:
+        bot.edit_message_text(
+            chat_id=chat_id,
+            message_id=telegram_message_id,
+            text=message,
+            parse_mode='Markdown'
+        )
+        return True
+    except Exception as e:
         return False

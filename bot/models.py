@@ -41,7 +41,7 @@ class OTP(BaseModel):
 
     @classmethod
     def otp_lifetime(cls, seconds):
-        return timezone.now() + timezone.timedelta(seconds=seconds)
+        return timezone.now() + timezone.timedelta(seconds=int(seconds))
 
     def __str__(self):
         return self.code
