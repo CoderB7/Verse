@@ -4,6 +4,8 @@ from telegram.error import RetryAfter
 from django.conf import settings
 import time
 
+
+
 class BotConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'bot'

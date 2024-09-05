@@ -165,7 +165,10 @@ function showInfo(data) {
     const channel_photo_name = data.chat_title;
     var notificationMessage = document.getElementById('notification-message');
 
-    channel_photo.innerHTML = '<img src="media/' + channel_photo_name + '/" alt="Channel photo" style="width:70px;height:70px;border-radius:50%;">';
+    let channel_photo_url;
+    
+    channel_photo_url = `/media/channel_photos/` + channel_photo_name + `.jpg`;
+    channel_photo.innerHTML = `<img src="${channel_photo_url}" alt="Channel photo" style="width:70px;height:70px;border-radius:50%;">`;
 
     telegramInfo.classList.add('notification-show');
     

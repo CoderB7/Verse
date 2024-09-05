@@ -56,10 +56,15 @@ def info_created(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Post)
 def trigger_send_message(sender, instance, created, **kwargs):
-    if created: 
+    if created:
         if instance.chat:
-            send_message.delay(
-            instance.chat.chat_id,
-            instance.title,
-            instance.content,
-        )
+            result = send_message.delay(
+                instance.chat.chat_id,
+                instance.title,
+                instance.content,
+            )
+            message_id = result.get(timeout=20)
+            
+            Post.objects.filter(id=instance.id).update(telegram_message_id=message_id)
+
+

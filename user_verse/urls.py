@@ -7,7 +7,8 @@ urlpatterns = [
     path('dashboard/channels/<int:channel_id>/posts/', views.PostListView.as_view(), name='post-list'),
     path('dashboard/channels/<int:channel_id>/post/', views.PostCreateView.as_view(), name='post-create'),
     path('dashboard/channels/<int:channel_id>/post/<int:post_id>/', views.PostUpdateView.as_view(), name='post-update'),
-    
+    # path('dashboard/testing/', views.post_create, name='post_create'),
+
     path('dashboard/blogs/', views.BlogListView.as_view(), name='dashboard-blogs'),
     path('dashboard/blogs/<int:blog_id>/posts/', views.PostListView.as_view(), name='blog-post-list'),
     path('dashboard/blogs/<int:blog_id>/post/', views.PostCreateView.as_view(), name='blog-post-create'),

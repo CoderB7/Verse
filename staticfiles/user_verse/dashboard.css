@@ -103,24 +103,44 @@ hr.n_1 {
     position: relative;
 }
 
-.channel-info-post {
+.channels-header {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1030;
+    border-radius: 0 0 16px 16px;
+    background-color: #272727;
+    padding-bottom: 20px; 
+}
+
+.channel-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+}
+
+.channel-info {
     padding: 10px 0;
     background-color: #272727;
+}
+
+.channel-info-post {
+    width: 100%;
+    background-color: #444444;
     border-radius: 0 0 16px 16px;
+    padding: 10px 20px 10px 20px; /* Add padding-bottom for spacing */
+}
+
+.channel-content {
+    margin-top: 220px;
+    padding-left: 30px;
 }
 
 .channel-info-image {
     padding: 0 0 0 20px;
 }
 
-.channel-content {
-    padding-top: 200px;
-}
-  
 .container_info.notification-show {
 opacity: 1;
 transform: translateX(0);
@@ -144,4 +164,20 @@ color: whitesmoke;
 img-notification {
 border-radius: 50%;
 max-width: 100px;
+}
+
+.date-header {
+    font-size: 1.5em;
+    margin-top: 40px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.sticky-div {
+    position: sticky;
+    top: 260px; /* Adjust this value based on the height of your actual header */
+    
+    z-index: 1000; /* Keeps it on top of other content */
+    padding: 10px; /* Optional: Add some padding for spacing */
+    border-bottom: 1px solid #ddd; /* Optional: Add a border for visual separation */
 }

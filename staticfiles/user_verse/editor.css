@@ -1,69 +1,82 @@
+/* Body with black background and full height */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #505259;
-    overflow: hidden; /* Prevents body from scrolling */
-  }
-
-.container-fluid {
-    height: 100vh;
-    overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #505259; /* Black background */
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Full height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff; /* White text */
 }
-  
-  .editor-container {
-    height: 100vh;
-    padding: 30px;
-    overflow: auto;
-    background: #505259;
-    
-  }
-  
-  .editor-toolbar {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-    padding: 10px;
-  }
-  
-  .editor-content-title {
-    padding: 20px;
-    font-size: 30px;
-    border: 2px solid #ddd;
-    border-radius: 7px;
-    outline: none;
-    min-height: 100px;
-  }
+.editor-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+/* Editor container filling the full page */
+.editor-container {
+  width: 100%;
+  max-width: 1200px; /* Limit max width for readability */
+  padding: 30px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-  .editor-content-body {
-    padding: 10px;
-    font-size: 20px;
-    border: 2px solid #ddd;
-    border-radius: 7px;
-    outline: none;
-    min-height: 550px;
-  }
-  
-  .editor-content-title:focus {
-    border-color: #007bff;
-  }
+/* Title field styles */
+.editor-content-title {
+  width: 100%;
+  height: 10vh;
+  max-width: 1200px;
+  padding: 20px;
+  font-size: 30px;
+  border: 3px solid #fff;
+  border-radius: 7px;
+  outline: none;
+  min-height: 100px;
+  background-color: #505259;
+  color: #fff;
+}
 
-  .editor-content-body:focus {
-    border-color: #007bff;
-  }
+/* Content field styles */
+.editor-content-body {
+  width: 100%;
+  height: 63vh;
+  max-width: 1200px;
+  padding: 20px;
+  font-size: 20px;
+  border: 3px solid #fff;
+  border-radius: 7px;
+  outline: none;
+  flex-grow: 1;
+  background-color: #505259;
+  color: #fff;
+  overflow-y: auto;
+}
 
-  .editor-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+/* On focus, change border color */
+.editor-content-title:focus, .editor-content-body:focus {
+  border-color: #007bff;
+}
 
-  .editor-placeholder {
-    color: #aaa
-  }
+/* Placeholder style */
+.editor-placeholder::placeholder {
+  color: #aaa;
+}
 
-  .btn-light {
-    margin-right: 5px;
-  }
-  
-  .btn-light:hover {
-    background-color: #f0f0f0;
-  }
-  
+/* Button styles */
+.btn {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.btn:hover {
+  background-color: #007bff;
+}

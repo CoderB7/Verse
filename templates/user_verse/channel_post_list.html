@@ -1,6 +1,7 @@
 {% extends "dashboard_base.html" %}
 
 {% load static %}
+{% load custom_filters %}
 
 {% block csrf_block %}
     <meta name="csrf-token" content="{{ csrf_token }}">
@@ -13,40 +14,48 @@
 <div class="col-10 p-4">
     <div class="container mt-4">
         {% if posts %}
-            <div class="container channel-info-post" data-bs-theme="light">
-                <div class="row">
-                    <div class="p-3 col-2">
-                        <div class="channel-info-image">
-                            <img src="{% if channel.photo %}{{ channel.photo.url }}{% else %}{% static 'default_image.jpg' %}
-                            {% endif %}" alt="Channel photo" style="width:130px;height:130px;border-radius:50%;" class="dynamic-image"> 
+            <div class="container channel-header" data-bs-theme="light">
+                <div class="container channel-info">
+                    <div class="row">
+                        <div class="p-3 col-2">
+                            <div class="channel-info-image">
+                                <img src="{% if channel.photo %}{{ channel.photo.url }}{% else %}{% static 'default_image.jpg' %}
+                                {% endif %}" alt="Channel photo" style="width:130px;height:130px;border-radius:50%;" class="dynamic-image"> 
+                            </div>
+                        </div>
+                        <div class="col-7 d-flex justify-content-center align-items-center pb-2"> 
+                            <h3 class="text-light fs-2 fw-bolder">{{channel.chat_title}}</h3>
                         </div>
                     </div>
-                    <div class="col-7 d-flex justify-content-center align-items-center pb-2"> 
-                        <h3 class="text-light fs-2 fw-bolder">{{channel.chat_title}}</h3>
-                    </div>
+                </div>
+                <div class="container channel-info-post">
+                    <h3 class="text-light fs-2 fw-bolder">Posts</h3>
                 </div>
             </div>
-            <div class="channel-content">
-                <h3 class="text-light fs-2 fw-bolder">Posts</h3>
-            </div>
-            <div class="container_divider_cs1">
+            
+            
+            <!-- <div class="container_divider_cs1 sticky-div">
                 <hr class="n_1">
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    {% for post in posts %}
-                    <div class="container channel-card">
-                        <a href="{% url 'post-update' channel.id post.id %}" style="text-decoration: none;">
-                            <div class="pt-3 pl-3 ml-4">
-                                <h3 class="fs-5">{{post.publish|date:"j F, Y"}}</h3>
-                            </div>
-                            <div class="p-2">              
-                                <h3 class="fs-2 fw-bolder">{{post.title}}</h3>
-                            </div>
-                            
-                        </a>    
+            </div> -->
+            <div class="container channel-content">
+                <div class="row">
+                    <div class="col-12">
+                        {% for date, posts in posts|group_by_date %}
+                            <div class="date-header"> {{ date }} </div>
+                            {% for post in posts %}
+                                <div class="container channel-card">
+                                    <a href="{% url 'post-update' channel.id post.id %}" style="text-decoration: none;">
+                                        <div class="pt-3 pl-3 ml-4">
+                                            <h3 class="fs-5">{{post.publish|date:"j F, Y"}}</h3>
+                                        </div>
+                                        <div class="p-2">              
+                                            <h3 class="fs-2 fw-bolder">{{post.title}}</h3>
+                                        </div>
+                                    </a>    
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center fixed-bottom-right">

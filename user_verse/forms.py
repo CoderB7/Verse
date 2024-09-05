@@ -1,5 +1,5 @@
 from django import forms
-from .models import Blog
+from .models import Blog, Post
 
 class BlogRegistrationForm(forms.ModelForm):
     
@@ -28,4 +28,23 @@ class BlogRegistrationForm(forms.ModelForm):
         if Blog.objects.filter(blog_title=title).exists():
             raise forms.ValidationError('Title already in use.')
         return title
+    
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'editor-title editor-content-title editor-placeholder',
+                'placeholder': 'Post title...',
+                'contenteditable': 'true',
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'editor-content-body editor-placeholder',
+                'placeholder': 'Start writing your content here...',
+                'contenteditable': 'true',
+                'rows': 10,
+            }),
+        }
     

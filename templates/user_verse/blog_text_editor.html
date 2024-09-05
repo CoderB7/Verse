@@ -19,34 +19,51 @@
                 <div id="error-message" class="alert alert-danger" style="display: none;"></div>
                 
                 
-                    <div id="blog-info" class="p-3" data-blog-id="{{verse_id}}">
-                        <h3 class="text-light">Blog |  <a href="{% url 'blog-post-list' verse_id %}" style="text-decoration: none; color: white"><span class="fs-2 fw-bolder">{{verse_name}}</span></a></h3>
+                <div id="blog-info" class="p-3" data-blog-id="{{verse_id}}">
+                    <h3 class="text-light">Blog |  <a href="{% url 'blog-post-list' verse_id %}" style="text-decoration: none; color: white"><span class="fs-2 fw-bolder">{{verse_name}}</span></a></h3>
+                </div>
+            
+                
+                <form method="POST" action="{% url 'blog-post-create' verse_id %}" autocomplete="off">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Error!</strong> Please correct the following errors:
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li><!--{{ field }}: -->{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex align-items-center justify-content-center">
+                        {{ form.title }}
                     </div>
-               
-                    
-                <div class="editor editor-title editor-content-title editor-placeholder" contenteditable="true" 
-                    data-placeholder="Post title...">{{ post.title|default:"Post title..." }}
-                </div>
-                <div class="editor editor-body editor-content-body editor-placeholder" contenteditable="true" 
-                    data-placeholder="Start writing your content here...">{{ post.content|default:"Start writing your content here..." }}
-                </div>
-                {% if post %}
-                <div id="post-id" class="d-flex justify-content-end" data-post-id="{{post.id}}">
-                    <a href="" class="">
-                        <button type="button" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1" onclick="submitBlogPost('blog-update')"> 
-                        Update
-                        </button>
-                    </a>
-                </div>
-                {% else %}
-                    <div class="d-flex justify-content-end">
-                        <a href="" class="">
-                            <button type="button" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1" onclick="submitBlogPost('blog-publish')"> 
-                            Publish
-                            </button>
-                        </a>
+        
+                    <!-- Content Field -->
+                    <div class="d-flex align-items-center justify-content-center">
+                        {{ form.content }}
                     </div>
-                {% endif %}    
+                    {% if post %}
+                        <div id="post-id" class="d-flex justify-content-end" data-post-id="{{post.id}}">
+                            
+                                <button type="submit" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1"> 
+                                Update
+                                </button>
+                            
+                        </div> 
+                        {% else %}
+                            <div class="d-flex justify-content-end">
+                                
+                                    <button type="submit" class="btn btn-lg mt-3 px-5 bg-dark text-light fs-1"> 
+                                    Publish
+                                    </button>
+                            
+                            </div>
+                        {% endif %}    
+                    </form>    
             </div>
         </div>
     </div>
