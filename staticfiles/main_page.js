@@ -94,7 +94,7 @@ function connect() {
     //     messageSocket.close();
     // };
 
-    infoSocket = new WebSocket("ws://" + window.location.host + "/ws/info/");
+    infoSocket = new WebSocket("wss://" + window.location.host + "/ws/info/");
 
     // on socket open
     infoSocket.onopen = function (e) {

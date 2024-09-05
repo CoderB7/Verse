@@ -147,8 +147,7 @@ class PostListView(LoginRequiredMixin, ListView):
         blog_id = kwargs.get('blog_id')
         if channel_id:
             channel = TelegramChatInfo.objects.get(id=channel_id)
-            channel_posts = Post.objects.filter(chat=channel_id)
-
+            channel_posts = Post.objects.filter(chat=channel_id).order_by('-created_at')
             context = {
                 "channel": channel,
                 "posts": channel_posts,
